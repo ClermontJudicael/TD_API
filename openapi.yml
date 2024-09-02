@@ -129,13 +129,13 @@ paths:
                 type: string
       responses:
         '200':
-          description: Joueurs associés avec succès
+          description: Player assiciate with success
         '400':
-          description: Requête invalide
+          description: Invalid request
         '404':
-          description: Équipe ou joueur non trouvé
+          description: Player or team not found
         '500':
-          description: Erreur interne du serveur
+          description: Internal server error
 
 components:
   schemas:
@@ -144,7 +144,7 @@ components:
       properties:
         id:
           type: string
-          description: Identifiant unique de la compétition
+          description: Unique competition identifier
           example: "1234a6b7"
         name:
           type: string
@@ -161,7 +161,7 @@ components:
         id:
           type: string
           description: Unique team identifier
-          example: "223e4567-e89b-12d3-a456-426614174001"
+          example: "14174001"
         name:
           type: string
           description: Team name
