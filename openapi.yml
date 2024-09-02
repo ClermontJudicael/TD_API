@@ -1,0 +1,209 @@
+openapi: 3.0.3
+info:
+  title: Foot competition manager
+  description: API for management of matches in a football competition
+  version: 1.0.0
+servers:
+  - url: https://api.foot.com
+    description: Principal server
+
+paths:
+  /competitions:
+    post:
+      responses:
+        '201':
+          description: Competition created with success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Competition'
+        '400':
+          description: Invaid request
+        '500':
+          description: Internal Server Error
+      summary: Create a new competition
+      description: Add a new competition to the list
+   
+              
+    get:
+      summary: Get list of competition
+      description: Return list of competition
+      responses:
+        '200':
+          description: List of competition
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Competition'
+        '500':
+          description: Internal Server Error
+
+  /teams:
+    post:
+      summary: Create a new team
+      description: Add a new team to the list
+      requestBody:
+        description: Name and Slogan
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamInput'
+      responses:
+        '201':
+          description: Team created with success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          description: Invaid request
+        '500':
+          description: Intenal server error
+    get:
+      summary: Get team list
+      description: Return team list
+      responses:
+        '200':
+          description: Team list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+        '500':
+          description: Internal server error
+
+  /teams/{teamId}/competitions:
+    post:
+      summary: Associate a team with competitions
+      description: Associates an existing team with one or more competitions.
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          description: Unique team identifier
+          schema:
+            type: string
+      requestBody:
+        description: List of competition identifiers to associate
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '200':
+          description: Successfully associated competitions
+        '400':
+          description: Invalid request
+        '404':
+          description: Team or competition not found
+        '500':
+          description: Internal server error
+
+  /teams/{teamId}/players:
+    post:
+      summary: Associate players with a team
+      description: .
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          description: Unique team identifier
+          schema:
+            type: string
+      requestBody:
+        description: List of player IDs to associate
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '200':
+          description: Joueurs associés avec succès
+        '400':
+          description: Requête invalide
+        '404':
+          description: Équipe ou joueur non trouvé
+        '500':
+          description: Erreur interne du serveur
+
+components:
+  schemas:
+    Competition:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identifiant unique de la compétition
+          example: "1234a6b7"
+        name:
+          type: string
+          description: Competition name
+          example: LIGA
+        location:
+          type: string
+          description: Country or Continent where the competition takes place
+          example: ESPAGNE
+    
+    Team:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique team identifier
+          example: "223e4567-e89b-12d3-a456-426614174001"
+        name:
+          type: string
+          description: Team name
+          example: Real Madrid
+        slogan:
+          type: string
+          description: Team slogan
+          example: "Hala Madrid!"
+        competitions:
+          type: array
+          description: List of competitions in which the team participates
+          items:
+            $ref: '#/components/schemas/Competition'
+        players:
+          type: array
+          description: Liste of player in the team
+          items:
+            $ref: '#/components/schemas/Player'
+    
+    TeamInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Team name
+          example: Real Madrid
+        slogan:
+          type: string
+          description: Team slogan
+          example: "Madrid!"
+      required:
+        - name
+        - slogan
+    
+    Player:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Player id
+          example: "38765"
+        name:
+          type: string
+          description: Player name
+          example: "Karim Benzema"
